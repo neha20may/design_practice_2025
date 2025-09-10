@@ -1,6 +1,4 @@
-package com.example.design_problems.service;
-
-import org.springframework.ui.context.Theme;
+package com.example.design_problems.service.multithreading;
 
 class MonitorLockExample {
     Integer otherObj= new Integer(2);

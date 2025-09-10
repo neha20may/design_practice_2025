@@ -1,8 +1,8 @@
-package com.example.design_problems.service;
+package com.example.design_problems.service.multithreading;
 
 import java.util.concurrent.Semaphore;
 
-class PrintNumberSeries {·
+class PrintNumberSeries {
 
     private int n;
     private Semaphore zeroSem, oddSem, evenSem;
@@ -27,5 +27,5 @@ class PrintNumberSeries {·
 
 }
 
-public class seriesprinting {
+class seriesprinting {
 }

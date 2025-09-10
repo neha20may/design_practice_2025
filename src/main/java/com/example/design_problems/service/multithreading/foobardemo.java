@@ -1,6 +1,4 @@
-package com.example.design_problems.service;
-
-import com.fasterxml.jackson.core.json.async.NonBlockingJsonParser;
+package com.example.design_problems.service.multithreading;
 
 class FooBar {
     private int n;

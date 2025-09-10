@@ -1,4 +1,4 @@
-package com.example.design_problems.service;
+package com.example.design_problems.service.multithreading;
 
 import java.util.concurrent.Semaphore;
 
