@@ -10,8 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static jdk.nashorn.internal.objects.NativeArray.forEach;
-import static org.apache.coyote.http11.Constants.a;
 
 public class collections_demo {
     static class ConsumerEg implements Consumer<Integer> {
