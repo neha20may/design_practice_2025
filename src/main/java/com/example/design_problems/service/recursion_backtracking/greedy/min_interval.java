@@ -29,56 +29,22 @@ public class min_interval {
             }
             return a[0] - b[0];
         });
-        Map<Integer, Integer> map = new HashMap();
-        for (int[] c : clips) {
-            int start = c[0];
-            int end = c[1];
-            if (map.containsKey(start)) {
-                if (map.get(start) < end) {
-                    map.put(start, end);
-                }
-            } else {
-                map.put(start, end);
-            }
-        }
-        System.out.println(map);
-        int ans = 0;
-        int mergedIntervalStart = clips[0][0];
-        int mergedIntervalEnd = 0;
-        int curMaxend = 0;
-        //mrged the intervals in map ; thas all
-        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
-            System.out.println("mstart = " + mergedIntervalStart + " mend = " + mergedIntervalEnd);
-            int start = e.getKey();
-            int end = e.getValue();
-            System.out.println("start  = " + start + " end = " + end);
-            if (start <= mergedIntervalEnd) {
-                // mergedIntervalEnd = Math.max(end, mergedIntervalEnd);
-                if (end > mergedIntervalEnd) {
-                    //this is a propspective candidate not the final one among all those fall < current mregdso far - this can give max or not
-                    // ans= ans+1;
-                    // mergedIntervalEnd= end;
-                    if (curMaxend < end) {
-                        curMaxend = end;
-                    }
-                }
-            } else {
+        int boundary = 0, farthest = 0, ans = 0;
 
-                if (start == mergedIntervalEnd + 1) {
-                    ans = ans + 1;
-                    mergedIntervalEnd = curMaxend;
-                    curMaxend = end;
-                } else {
-                    return -1;
-                }
+        for (int i = 0; i < clips.length; i++) {
+            System.out.println("i=" + i + " { clips[0] = " + clips[i][0] + " ,clips[1] =  " + clips[i][1] + " }" + " boundary = " + boundary);
+            ;
+            if (clips[i][0] > boundary) {
+                System.out.println("!! this clip start  > boundary !!");
+                ans++;
+                boundary = farthest;
+                System.out.println("setting boundary to fartheest " + boundary);
             }
+
+            farthest = Math.max(farthest, clips[i][1]);
+            System.out.println("farthest change ? = " + farthest);
         }
-        System.out.println("final mstart = " + mergedIntervalStart + " mend = " + mergedIntervalEnd);
-        if (mergedIntervalEnd == time) {
-            return ans;
-        } else {
-            return -1;
-        }
+        return ans;
     }
 
 
