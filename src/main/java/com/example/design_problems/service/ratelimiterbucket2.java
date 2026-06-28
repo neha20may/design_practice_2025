@@ -1,18 +1,25 @@
 package com.example.design_problems.service;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static java.util.Collections.min;
 
 /**
- * . Imagine you have a bucket that gets filled with tokens at the rate of 1 token per second. The bucket can hold a maximum of N tokens. Implement a thread-safe class that lets threads get a token when one is available. If no token is available, then the token-requesting threads should block. The class should expose an API called getToken that various threads can call to get a token.
+ * Imagine you have a bucket that gets filled with tokens at the rate of 1 token per second. The bucket can hold a maximum of N tokens.
+ * Implement a thread-safe class that lets threads get a token when one is available. If no token is available, then the token-requesting threads should block.
+ * The class should expose an API called getToken that various threads can call to get a token.
  */
 
 class intelligentBucket {
     int N = 3;
     int availableTokens = 0;
-    long lastRefillTime = 0;
+    long lastRefillTime = System.currentTimeMillis();
     long intervalMs = 1000;
     int capacity = N;
 //
@@ -80,42 +87,65 @@ class intelligentBucket {
 
 class conbucket2 {
     int N = 3;
-    Thread[] pool;
+    //    Thread[] pool;
+//    ExecutorService pool = Executors.newFixedThreadPool(N);
+    ExecutorService pool;
     intelligentBucket bucket = new intelligentBucket();
+    List<Runnable> tasks= new ArrayList<>();
 
     public conbucket2(int n) {
         this.N = n;
-        this.pool = new Thread[N];
+        this.pool = Executors.newFixedThreadPool(N);
     }
 
     private void createpool() {
         System.out.println("creating pool with N=" + N);
         for (int i = 0; i < N; i++) {
-            pool[i] = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    bucket.getToken();
-                }
-            });
-            pool[i].setName("pool thread " + i);
+//            pool.submit(
+////                    new Thread(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            bucket.getToken();
+//                        }
+////                        )
+//                    });
+////            pool[i].setName("pool thread " + i);
+//            tasks.add(new Runnable() {
+//                @Override
+//                public void run() {
+//                    bucket.getToken();
+//                }
+//            });
+
+            tasks.add(()->{bucket.getToken();});
+
         }
+
     }
 
     public void runpool() {
         createpool();
-        for (int i = 0; i < N; i++) {
-            pool[i].start();
+//        for (int i = 0; i < N; i++) {
+//            pool[i].start();
+//        }
+        for(Runnable task: tasks){
+            pool.submit(task);
         }
-    }
 
-    public void waitpool() {
-        for (int i = 0; i < N; i++) {
-            try {
-                pool[i].join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    }
+//
+//    public void waitpool() {
+//        for (int i = 0; i < N; i++) {
+//            try {
+//                pool[i].join();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+    public void stoppool(){
+        pool.shutdown();
     }
 }
 
@@ -124,7 +154,8 @@ public class ratelimiterbucket2 {
         //no need to write producer
         conbucket2 cobj = new conbucket2(100);
         cobj.runpool();
-        cobj.waitpool();
+//        cobj.waitpool();
+        cobj.stoppool();
 
     }
 }
